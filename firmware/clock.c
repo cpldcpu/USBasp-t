@@ -13,6 +13,7 @@
 #include "clock.h"
 
 /* wait time * 320 us */
+
 void clockWait(uint8_t time) {
 
 	uint8_t i;

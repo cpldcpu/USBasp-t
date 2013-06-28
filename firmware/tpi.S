@@ -9,17 +9,24 @@
 
 #define TPI_CLK_PORT PORTB
 #define TPI_CLK_DDR DDRB
-#define TPI_CLK_BIT 5
 #define TPI_DATAOUT_PORT PORTB
 #define TPI_DATAOUT_DDR DDRB
-#define TPI_DATAOUT_BIT 3
+
+#ifdef __AVR_ATtiny85__
+#	define TPI_DATAOUT_BIT 0
+#	define TPI_CLK_BIT 2
+#else
+#	define TPI_DATAOUT_BIT 3
+#	define TPI_CLK_BIT 5
+#endif
+
+#define TPI_DATAIN_PIN PINB
+
 #ifdef TPI_WITH_OPTO
-#	define TPI_DATAIN_PIN PINB
 #	define TPI_DATAIN_DDR DDRB
 #	define TPI_DATAIN_BIT 4
 #else
-#	define TPI_DATAIN_PIN PINB
-#	define TPI_DATAIN_BIT 3
+#	define TPI_DATAIN_BIT TPI_DATAOUT_BIT
 #endif
 
 .comm tpi_dly_cnt, 2

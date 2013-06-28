@@ -14,23 +14,36 @@
 #include "clock.h"
 #include "usbasp.h"
 
-#define spiHWdisable() SPCR = 0
 
 uchar sck_sw_delay;
 uchar sck_spcr;
 uchar sck_spsr;
 uchar isp_hiaddr;
 
-void spiHWenable() {
-	SPCR = sck_spcr;
-	SPSR = sck_spsr;
-}
+#ifdef __AVR_ATtiny85__
+	#define spiHWdisable() 
+	#define spiHWenable() 
+#else
+	#define spiHWdisable() SPCR = 0
+	void spiHWenable() {
+		SPCR = sck_spcr;
+		SPSR = sck_spsr;
+	}
+#endif
 
 void ispSetSCKOption(uchar option) {
 
+#ifndef __AVR_ATtiny85__
 	if (option == USBASP_ISP_SCK_AUTO)
 		option = USBASP_ISP_SCK_375;
+#else
+	if (option == USBASP_ISP_SCK_AUTO)
+		option = USBASP_ISP_SCK_32;  // highest speed w/o hardware
+		//USBASP_ISP_SCK_93_75  could be done in SW too <- TODO
+#endif
 
+
+#ifndef __AVR_ATtiny85__		
 	if (option >= USBASP_ISP_SCK_93_75) {
 		ispTransmit = ispTransmit_hw;
 		sck_spsr = 0;
@@ -62,11 +75,16 @@ void ispSetSCKOption(uchar option) {
 			break;
 		}
 
-	} else {
+	} else 
+#endif
+	{
 		ispTransmit = ispTransmit_sw;
 		switch (option) {
-
+		case USBASP_ISP_SCK_93_75:
+			sck_sw_delay = 1;
+			break;
 		case USBASP_ISP_SCK_32:
+		default:
 			sck_sw_delay = 3;
 
 			break;
@@ -170,14 +188,16 @@ uchar ispTransmit_sw(uchar send_byte) {
 
 	return rec_byte;
 }
-
+#ifndef __AVR_ATtiny85__		
 uchar ispTransmit_hw(uchar send_byte) {
+
 	SPDR = send_byte;
 
 	while (!(SPSR & (1 << SPIF)))
 		;
 	return SPDR;
 }
+#endif
 
 uchar ispEnterProgrammingMode() {
 	uchar check;
@@ -192,8 +212,9 @@ uchar ispEnterProgrammingMode() {
 		if (check == 0x53) {
 			return 0;
 		}
-
+#ifndef __AVR_ATtiny85__		
 		spiHWdisable();
+#endif
 
 		/* pulse RST */
 		ispDelay();
@@ -202,9 +223,11 @@ uchar ispEnterProgrammingMode() {
 		ISP_OUT &= ~(1 << ISP_RST); /* RST low */
 		ispDelay();
 
+#ifndef __AVR_ATtiny85__		
 		if (ispTransmit == ispTransmit_hw) {
 			spiHWenable();
 		}
+#endif
 
 	}
 
@@ -274,7 +297,6 @@ uchar ispWriteFlash(unsigned long address, uchar data, uchar pollmode) {
 				starttime = TIMERVALUE;
 				retries--;
 			}
-
 		}
 		return 1; /* error */
 	}

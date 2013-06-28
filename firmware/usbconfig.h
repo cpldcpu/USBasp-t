@@ -26,16 +26,28 @@ the newest features and options.
 /* This is the port where the USB bus is connected. When you configure it to
  * "B", the registers PORTB, PINB and DDRB will be used.
  */
-#define USB_CFG_DMINUS_BIT      0
+
+#ifndef __AVR_ATtiny85__	
+	#define USB_CFG_DMINUS_BIT      0
+#else
+	#define USB_CFG_DMINUS_BIT      3
+#endif
+	
 /* This is the bit number in USB_CFG_IOPORT where the USB D- line is connected.
  * This may be any bit in the port.
  */
-#define USB_CFG_DPLUS_BIT       1
+ 
+#ifndef __AVR_ATtiny85__	
+	#define USB_CFG_DPLUS_BIT       1
+#else
+	#define USB_CFG_DPLUS_BIT      4
+#endif
+	
 /* This is the bit number in USB_CFG_IOPORT where the USB D+ line is connected.
  * This may be any bit in the port. Please note that D+ must also be connected
  * to interrupt pin INT0!
  */
-#define USB_CFG_CLOCK_KHZ 12000
+#define USB_CFG_CLOCK_KHZ (F_CPU/1000)
 /* Clock rate of the AVR in MHz. Legal values are 12000, 16000 or 16500.
  * The 16.5 MHz version of the code requires no crystal, it tolerates +/- 1%
  * deviation from the nominal frequency. All other rates require a precision
@@ -110,6 +122,24 @@ the newest features and options.
  * usbdrv.h.
  */
 
+ 
+ #ifndef __ASSEMBLER__
+	extern void usbEventResetReady(void);
+#endif
+
+ #ifdef __AVR_ATtiny85__	
+	#define USB_RESET_HOOK(isReset)             if(!isReset){usbEventResetReady();}
+	/* This macro is a hook if you need to know when an USB RESET occurs. It has
+	 * one parameter which distinguishes between the start of RESET state and its
+	 * end.
+	 */
+	#define USB_CFG_HAVE_MEASURE_FRAME_LENGTH   1
+	/* define this macro to 1 if you want the function usbMeasureFrameLength()
+	 * compiled in. This function can be used to calibrate the AVR's RC oscillator.
+	 */
+#endif
+ 
+ 
 /* -------------------------- Device Description --------------------------- */
 
 #define  USB_CFG_VENDOR_ID  0xc0, 0x16  /* 5824 in dec, stands for VOTI */
@@ -236,5 +266,14 @@ the newest features and options.
 /* #define USB_INTR_ENABLE_BIT     INT0 */
 /* #define USB_INTR_PENDING        GIFR */
 /* #define USB_INTR_PENDING_BIT    INTF0 */
+
+#ifdef __AVR_ATtiny85__	
+	// use PCINT1 instead of INT0
+	#define USB_INTR_CFG            PCMSK
+	#define USB_INTR_CFG_SET        (1<<USB_CFG_DPLUS_BIT)
+	#define USB_INTR_ENABLE_BIT     PCIE
+	#define USB_INTR_PENDING_BIT    PCIF
+	#define USB_INTR_VECTOR         SIG_PIN_CHANGE
+#endif
 
 #endif /* __usbconfig_h_included__ */
