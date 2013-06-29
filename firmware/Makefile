@@ -2,7 +2,7 @@
 #   Makefile for usbasp
 #   20061119   Thomas Fischl        original
 #   20061120   Hanns-Konrad Unger   help: and TARGET=atmega48 added
-#
+#	20130628   cpldcpu				TARGET=ATtiny85 added
 
 # TARGET=atmega8    HFUSE=0xc9  LFUSE=0xef
 # TARGET=atmega48   HFUSE=0xdd  LFUSE=0xff
