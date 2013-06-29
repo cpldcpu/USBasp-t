@@ -3361,7 +3361,7 @@ Source: www.kingbright.com</description>
 <variantdefs>
 </variantdefs>
 <classes>
-<class number="0" name="default" width="0" drill="0">
+<class number="0" name="default" width="0.2032" drill="0">
 </class>
 <class number="1" name="Power" width="0.3048" drill="0">
 <clearance class="1" value="0.3048"/>
