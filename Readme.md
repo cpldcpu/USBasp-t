@@ -39,4 +39,3 @@ v1.1 PCB front side:
 v1.1 PCB rear side:   
 ![V1.1 PCB rear](/hardware/microusbasp_rearside.jpg)
 
-[![githalytics.com alpha](https://cruel-carlota.pagodabox.com/0bc433ae12c004974ac56f2a246da1ff "githalytics.com")](http://githalytics.com/cpldcpu/USBasp-t)
