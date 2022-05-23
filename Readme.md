@@ -28,6 +28,12 @@ Hardware:
 * Update v1.1 done, ready for manufacturing.
 * Update 02/08/2013: All parts received, first device built.
 
+### Flashing
+
+* Flash micronucleus
+* Set the fuses as in thuis Makefile: HFUSE=0x5d, LFUSE=0xe1, EFUSE=0xfe
+* Flash the firmware with micronucleus
+
 ### Hardware ###
 
 Circuit:  
