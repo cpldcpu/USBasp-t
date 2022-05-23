@@ -22,17 +22,17 @@ Software:
 * USB device is recognized as USBasp and communicates with AVRdude.
 * Software tested on microUSB hardware. Both TPI and SPI seem to work.
 
-#### Flashing
-
-* Flash micronucleus
-* Set the fuses as in thuis Makefile: HFUSE=0x5d, LFUSE=0xe1, EFUSE=0xfe
-* Flash the firmware with micronucleus
-
 Hardware:
 
 * Revision 0.5 sent to OSH park for pcb manufacturing.
 * Update v1.1 done, ready for manufacturing.
 * Update 02/08/2013: All parts received, first device built.
+
+### Flashing
+
+* Flash micronucleus
+* Set the fuses as in thuis Makefile: HFUSE=0x5d, LFUSE=0xe1, EFUSE=0xfe
+* Flash the firmware with micronucleus
 
 ### Hardware ###
 
