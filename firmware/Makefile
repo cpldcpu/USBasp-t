@@ -11,6 +11,7 @@
 TARGET=attiny85
 HFUSE=0x5d
 LFUSE=0xe1
+EFUSE=0xfe
 #F_CPU=12000000
 F_CPU=16500000
 
@@ -37,6 +38,7 @@ help:
 	@echo "       TARGET=${TARGET}"
 	@echo "       LFUSE=${LFUSE}"
 	@echo "       HFUSE=${HFUSE}"
+	@echo "       EFUSE=${EFUSE}"
 	@echo "       CLOCK=${F_CPU}"
 	@echo "       ISP=${ISP}"
 	@echo "       PORT=${PORT}"
@@ -84,7 +86,7 @@ flash:
 	avrdude -c ${ISP} -p ${TARGET} -P ${PORT} -U flash:w:main.hex
 
 fuses:
-	avrdude -c ${ISP} -p ${TARGET} -P ${PORT} -u -U hfuse:w:$(HFUSE):m -U lfuse:w:$(LFUSE):m
+	avrdude -c ${ISP} -p ${TARGET} -P ${PORT} -u -U hfuse:w:$(HFUSE):m -U lfuse:w:$(LFUSE):m -U efuse:w:$(EFUSE):m
 
 avrdude:
 	avrdude -c ${ISP} -p ${TARGET} -P ${PORT} -v
